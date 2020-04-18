@@ -1,0 +1,11 @@
+         CLIPS (6.31 6/12/19)
+CLIPS> (deffunction fibo (?a)
+(if (or (= ?a 0)(= ?a 1)) then
+?a
+else
+(+ (fibo(- ?a 1)) (fibo (- ?a 2)))))
+CLIPS> fibo (3)
+fibo
+CLIPS> (fibo 4)
+3
+CLIPS> 
