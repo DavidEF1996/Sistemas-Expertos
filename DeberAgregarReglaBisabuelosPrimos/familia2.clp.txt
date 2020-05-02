@@ -1,0 +1,202 @@
+(defrule progenitor 
+(padre-de ?padre ?hijo)
+(marido-de ?padre ?madre)
+=>
+(assert (progenitor-de ?madre ?hijo))
+)
+
+(defrule esposa
+(marido-de ?hombre ?mujer)
+=>
+(assert (esposa-de ?mujer ?hombre))
+(printout t ?mujer " es la esposa de " ?hombre crlf)
+)
+
+(defrule padre
+(progenitor-de ?padre ?hijo)
+(hombre ?padre)
+=>
+(assert (padre-de ?padre ?hijo))
+(printout t ?padre " es padre de " ?hijo crlf)
+)
+
+(defrule madre
+(progenitor-de ?madre ?hijo)
+(mujer ?madre)
+=>
+(assert (madre-de ?madre ?hijo))
+(printout t ?madre " es madre de " ?hijo crlf)
+)
+
+; --------Abuelos----------
+(defrule abuelos
+(progenitor-de ?padre ?hijo)
+(progenitor-de ?hijo ?nieto)
+=>
+(assert (abuelos-de ?padre ?nieto))
+)
+
+(defrule abuelo
+(abuelos-de ?padre ?nieto)
+(hombre ?padre)
+=>
+(assert (abuelo-de ?padre ?nieto))
+(printout t ?padre " es abuelo de " ?nieto crlf)
+)
+
+(defrule abuela
+(abuelos-de ?madre ?nieto)
+(mujer ?madre)
+=>
+(assert (abuela-de ?madre ?nieto))
+(printout t ?madre " es abuela de " ?nieto crlf)
+)
+;-------Bisabuelos
+(defrule bisabuelos
+(progenitor-de ?padre ?hijo)
+(progenitor-de ?hijo ?nieto)
+(progenitor-de ?nieto ?bisnieto)
+=>
+(assert (bisabuelos-de ?padre ?bisnieto))
+)
+
+(defrule bisabuelo
+(bisabuelos-de ?padre ?bisnieto)
+(hombre ?padre)
+=>
+(assert (abuelo-de ?padre ?bisnieto))
+(printout t  ?padre " es bisabuelo de " ?bisnieto crlf)
+)
+
+(defrule bisabuela
+(bisabuelos-de ?madre ?bisnieto)
+(mujer ?madre)
+=>
+(assert (abuela-de ?madre ?bisnieto))
+(printout t  ?madre " es bisabuela de " ?bisnieto crlf)
+)
+
+;------ hermanos------
+(defrule hermanos-padre
+(padre-de ?padre ?hijo1)
+(padre-de ?padre ?hijo2)
+(test (neq ?hijo1 ?hijo2))
+=>
+(assert (hermanos ?hijo1 ?hijo2))
+)
+
+(defrule hermanos-madre
+(madre-de ?madre ?hijo1)
+(madre-de ?madre ?hijo2)
+(test (neq ?hijo1 ?hijo2))
+=>
+(assert (hermanos ?hijo1 ?hijo2))
+)
+
+(defrule hermano
+(hermanos ?hijo1 ?hijo2)
+(hombre ?hijo1)
+=>
+(assert (hermano-de ?hijo1 ?hijo2))
+(printout t ?hijo1 " es hermano de " ?hijo2 crlf)
+)
+
+(defrule hermana
+(hermanos ?hijo1 ?hijo2)
+(mujer ?hijo1)
+=>
+(assert (hermano-de ?hijo1 ?hijo2))
+(printout t ?hijo1 " es hermana de " ?hijo2 crlf)
+)
+
+;--------Tios--------
+
+(defrule tios
+(progenitor-de ?padre ?hijo)
+(hermanos ?padre ?hermano)
+=>
+(assert (tios ?hermano ?hijo))
+)
+
+(defrule tio
+(tios ?tio ?sobrino)
+(hombre ?tio)
+=>
+(assert (tio-de ?tio ?sobrino))
+(printout t ?tio " es tio de " ?sobrino crlf)
+)
+
+(defrule tia
+(tios ?tia ?sobrino)
+(mujer ?tia)
+=>
+(assert (tia-de ?tia ?sobrino))
+(printout t ?tia " es tia de " ?sobrino crlf )
+)
+
+(defrule sobrino
+(tios ?tios ?sobrino)
+(hombre ?sobrino)
+=>
+(assert (sobrino-de ?sobrino ?tios))
+(printout t ?sobrino " es sobrino de " ?tios crlf)
+)
+
+(defrule sobrina
+(tios ?tios ?sobrina)
+(mujer ?sobrina)
+=>
+(assert (sobrina-de ?sobrina ?tios))
+(printout t ?sobrina " es sobrina de " ?tios crlf)
+)
+
+
+;----Primos-----
+(defrule primos
+(progenitor-de ?padre ?hijo)
+(progenitor-de ?padre1 ?hijo1)
+(hermanos ?padre ?padre1)
+=>
+(assert (primos ?hijo ?hijo1))
+)
+------------------------------
+(defrule primo
+(primos ?hijo ?hijo1)
+(hombre ?hijo)
+=>
+(assert (primo-de ?hijo ?hijo1))
+(printout t ?hijo " ES PRIMO DE " ?hijo1 crlf))
+
+;---- HECHOS---
+(deffacts inicio
+(hombre Ariel)
+(mujer Gladys)
+(hombre David)
+(mujer Arenita)
+(mujer Joss)
+(hombre Cristian)
+(hombre Victor)
+(mujer Rosa)
+(hombre Juan)
+(hombre	Jonathan)
+(hombre	Orlando)
+(hombre Andres)
+(progenitor-de Rosa Gladys)
+(progenitor-de Victor Gladys)
+(progenitor-de Ariel David)
+(progenitor-de Ariel Cristian)
+(progenitor-de Ariel Arenita)
+(marido-de Ariel Gladys)
+(progenitor-de David Jonathan)
+(marido-de David Joss)
+(progenitor-de Arenita Andres)
+)
+
+
+
+
+
+
+
+
+ 
